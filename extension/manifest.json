@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "FocusFlow - The Observer",
+  "version": "1.0",
+  "description": "Intelligent productivity agent that detects and blocks internet rabbit holes.",
+  "permissions": ["activeTab", "tabs", "storage", "webRequest"],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup/index.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/blocker.js"],
+      "run_at": "document_start"
+    }
+  ]
+}
