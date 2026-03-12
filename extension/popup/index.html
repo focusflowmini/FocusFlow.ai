@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusFlow</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0a0a0c;
+            --accent-primary: #6366f1;
+            --accent-secondary: #a855f7;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --card-bg: #17171a;
+            --danger: #ef4444;
+            --success: #22c55e;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            width: 320px;
+            margin: 0;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .logo {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        h1 {
+            font-size: 20px;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .status-badge {
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 100px;
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--success);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            background: var(--card-bg);
+            border: 1px solid #26262a;
+            border-radius: 12px;
+            padding: 12px;
+            color: white;
+            font-family: inherit;
+            box-sizing: border-box;
+            transition: all 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        button {
+            width: 100%;
+            background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
+            border: none;
+            border-radius: 12px;
+            padding: 14px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+            opacity: 0.9;
+        }
+
+        .active-session {
+            display: none;
+            text-align: center;
+        }
+
+        .score-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 4px solid var(--card-bg);
+            border-top-color: var(--accent-primary);
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .info-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .info-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 14px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">F</div>
+        <h1>FocusFlow</h1>
+        <div class="status-badge" id="status">Ready</div>
+    </div>
+
+    <!-- Setup View -->
+    <div id="setup-view">
+        <div class="form-group">
+            <label for="goal">WHAT IS YOUR FOCUS GOAL?</label>
+            <input type="text" id="goal" placeholder="e.g., Learning Python, Writing Blog...">
+        </div>
+        <button id="start-btn">Initialize Brain</button>
+    </div>
+
+    <!-- Active View -->
+    <div id="active-view" class="active-session">
+        <div class="score-circle" id="score-val">0%</div>
+        <div class="info-card">
+            <div class="info-label">CURRENT GOAL</div>
+            <div class="info-value" id="current-goal-display">-</div>
+        </div>
+        <button id="stop-btn" style="background: rgba(239, 68, 68, 0.1); color: var(--danger); box-shadow: none;">Terminate Session</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
