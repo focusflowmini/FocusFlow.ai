@@ -17,7 +17,20 @@ sequenceDiagram
     B-->>E: Connection Established
 ```
 
-## 2. Tab Change & Analysis
+## 2. Focus Tab Selection
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant E as Extension Popup
+    participant B as Backend (The Brain)
+    
+    U->>E: Click "Focus on this Tab"
+    E->>E: Store tabId as FocusAnchor
+    E->>B: WS Message {type: "set_focus_tab", tab_id: "..."}
+    B->>B: Update Session Tracker state
+```
+
+## 3. Tab Change & Analysis
 ```mermaid
 sequenceDiagram
     participant E as Extension (Background)
