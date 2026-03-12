@@ -8,7 +8,8 @@ graph TD
     A[Chrome Browser] --> B[Chrome Extension - The Observer]
     B -->|WebSocket| C[FastAPI Server - The Brain]
     C -->|API Call| D[Groq LLM Engine]
-    C -->|State| E[In-Memory Session Store]
+    C -->|Session Registry| E[In-Memory Session Store]
+    C -->|Persistence| G[(PostgreSQL Database)]
     B -->|Content Script| F[Web Page Blocker]
     F -->|Feedback| B
 ```
@@ -16,16 +17,17 @@ graph TD
 ## 2. Component Breakdown
 
 ### 2.1 The Observer (Frontend)
-- **Background Script:** Uses `chrome.tabs.onUpdated` and `chrome.tabs.onActivated` to monitor user activity.
-- **WebSocket Client:** Manages the persistent connection to the Brain. Handles auto-reconnects.
-- **Content Scripts:** Injected into tabs to enforce "blocks." It uses a premium CSS overlay to obscure distracting content.
-- **Popup UI:** Built with Vanilla HTML/CSS/JS. High-performance, low latency, and follows the "FocusFlow" premium aesthetic.
+- **Background Script:** Uses `chrome.tabs.onUpdated` and `chrome.tabs.onActivated` to monitor user activity. It maintains the state of the "Focus Tab" and reports deviations.
+- **WebSocket Client:** Manages a persistent connection to the Brain, identified by a unique `session_id`.
+- **Content Scripts:** Injected into tabs to enforce "blocks." It uses a premium CSS overlay to obscure distracting content and collects user feedback.
+- **Popup UI:** Built with Vanilla HTML/CSS/JS. Allows users to initialize sessions, set their focus goal, and pin a "Focus Tab."
 
 ### 2.2 The Brain (Backend)
-- **FastAPI Core:** Provides the WebSocket server and REST endpoints for session initialization.
-- **LLM Service (Groq):** A dedicated service that crafts prompts for the Groq API to determine semantic relevance.
-- **State Machine:** A logic layer that tracks the user's progress through a "Path." It uses a scoring algorithm to decide when a "rabbit hole" has been entered.
-- **Session Manager:** Tracks metadata for the current session (e.g., target task, whitelist, distraction history).
+- **FastAPI Core:** Provides the WebSocket server and REST endpoints for session initialization and history retrieval.
+- **LLM Service (Groq):** A dedicated service that crafts prompts for the Groq API, incorporating the user's focus goal and recent tab history (context window).
+- **Session Registry:** Replaces the global state to support multiple concurrent users, each with their own tracker and history.
+- **Scoring Engine:** A logic layer that calculates distraction levels based on LLM feedback, focus tab proximity, and user history.
+- **Database (PostgreSQL):** Persists session data, distraction logs, and user configurations for long-term analytics.
 
 ## 3. Technology Stack
 - **Frontend:** HTML5, CSS3, ES6 JavaScript, Chrome Extensions API (Manifest V3).

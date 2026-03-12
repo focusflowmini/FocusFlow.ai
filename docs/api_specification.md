@@ -13,6 +13,7 @@ Sent whenever the active tab URL/Title changes.
   "data": {
     "url": "https://www.youtube.com/watch?v=...",
     "title": "Learn FastAPI in 10 Minutes",
+    "is_focus_tab": false,
     "timestamp": "2023-10-27T10:00:00Z"
   }
 }
@@ -63,7 +64,8 @@ Initializes a new session with a target focus goal.
 ```json
 {
   "session_id": "uuid-v4-string",
-  "status": "active"
+  "status": "active",
+  "goal": "Building a Chrome Extension..."
 }
 ```
 
