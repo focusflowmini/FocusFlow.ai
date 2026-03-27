@@ -21,10 +21,27 @@
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-primary);
-            width: 320px;
+            width: 350px;
+            max-height: 500px;
             margin: 0;
             padding: 20px;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        /* Custom Scrollbar */
+        body::-webkit-scrollbar {
+            width: 6px;
+        }
+        body::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+        body::-webkit-scrollbar-thumb {
+            background: var(--card-bg);
+            border-radius: 10px;
+        }
+        body::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-primary);
         }
 
         .header {
@@ -147,6 +164,8 @@
         .info-value {
             font-size: 14px;
             font-weight: 500;
+            word-break: break-word;
+            line-height: 1.4;
         }
     </style>
 </head>
@@ -173,7 +192,15 @@
             <div class="info-label">CURRENT GOAL</div>
             <div class="info-value" id="current-goal-display">-</div>
         </div>
-        <button id="stop-btn" style="background: rgba(239, 68, 68, 0.1); color: var(--danger); box-shadow: none;">Terminate Session</button>
+        
+        <div class="info-card" id="focus-tab-card">
+            <div class="info-label">FOCUS ANCHOR</div>
+            <div class="info-value" id="focus-tab-display">Not Set</div>
+        </div>
+
+        <button id="focus-btn" style="background: rgba(99, 102, 241, 0.1); color: var(--accent-primary); box-shadow: none; margin-bottom: 12px; border: 1px solid var(--accent-primary);">Set Current as Focus Tab</button>
+        <button id="stop-btn" style="background: rgba(239, 68, 68, 0.1); color: var(--danger); box-shadow: none; margin-bottom: 12px;">Terminate Session</button>
+        <button id="reset-btn" style="background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); box-shadow: none; font-size: 11px; padding: 10px;">Reset All Logs & Sessions</button>
     </div>
 
     <script src="script.js"></script>

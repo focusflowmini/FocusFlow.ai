@@ -6,12 +6,18 @@ FocusFlow follows a client-server architecture where the Chrome Extension acts a
 ```mermaid
 graph TD
     A[Chrome Browser] --> B[Chrome Extension - The Observer]
-    B -->|WebSocket| C[FastAPI Server - The Brain]
-    C -->|API Call| D[Groq LLM Engine]
-    C -->|Session Registry| E[In-Memory Session Store]
-    C -->|Persistence| G[(PostgreSQL Database)]
-    B -->|Content Script| F[Web Page Blocker]
-    F -->|Feedback| B
+    B -->|WebSocket: Tab Events| C[FastAPI Server]
+    subgraph Agentic Brain [LangGraph]
+        C --> D[Eval Node: Classification]
+        D --> E[History Node: Context Analysis]
+        E --> F[Decision Node: Strategy]
+        F --> G[Action Node: Block/Warn/Allow]
+    end
+    G -->|Socket: Action Command| B
+    D -->|API Call| H[Groq LLM Engine]
+    C -->|Persistence| I[(PostgreSQL Database)]
+    B -->|Content Script| J[Web Page Blocker]
+    J -->|Feedback| B
 ```
 
 ## 2. Component Breakdown

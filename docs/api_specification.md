@@ -33,19 +33,26 @@ Sent when a user overrides a block.
 }
 ```
 
-### 1.3 Server -> Client: Intervention
-Sent when the distraction score exceeds the threshold.
+### 1.3 Server -> Client: Agent Action
+Sent when the LangGraph agent decides on an autonomous strategy.
 
 ```json
 {
-  "type": "intervention",
+  "type": "agent_action",
   "data": {
-    "action": "block",
-    "reason": "Semantic drift detected. Current focus: 'Researching FastAPI', but visiting 'Gaming Content'.",
-    "score": 0.85
+    "action": "BLOCK | WARN | NOTIFY | ALLOW",
+    "category": "SOCIAL_MEDIA | WORK_RELATED | RESEARCH | UNKNOWN",
+    "reason": "Agent reasoning logic here...",
+    "score_impact": 0.2,
+    "current_score": 0.85
   }
 }
 ```
+
+- **BLOCK:** Injects the full blocker overlay.
+- **WARN:** Shows a semi-transparent warning at the top of the tab.
+- **NOTIFY:** Sends a browser notification (desktop) but doesn't interrupt the tab.
+- **ALLOW:** Updates the internal score but takes no visible action.
 
 ## 2. REST API (Session Management)
 
