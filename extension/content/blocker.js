@@ -1,8 +1,82 @@
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.type === "BLOCK_PAGE") {
         injectBlocker(message.reason);
+    } else if (message.type === "SHOW_WARNING") {
+        injectWarning(message.reason);
+    } else if (message.type === "ADD_HIGHLIGHT") {
+        toggleHighlight(true);
+    } else if (message.type === "REMOVE_HIGHLIGHT") {
+        toggleHighlight(false);
     }
 });
+
+function toggleHighlight(enable) {
+    let highlight = document.getElementById('focusflow-anchor-highlight');
+    if (enable) {
+        if (highlight) return;
+        highlight = document.createElement('div');
+        highlight.id = 'focusflow-anchor-highlight';
+        highlight.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            border: 5px solid transparent;
+            border-image: linear-gradient(to right, #6366f1, #a855f7) 1;
+            box-sizing: border-box;
+            pointer-events: none;
+            z-index: 2147483646;
+            box-shadow: inset 0 0 20px rgba(99, 102, 241, 0.4);
+        `;
+        document.documentElement.appendChild(highlight);
+    } else {
+        if (highlight) highlight.remove();
+    }
+}
+
+function injectWarning(reason) {
+    if (document.getElementById('focusflow-warning')) return;
+
+    const warning = document.createElement('div');
+    warning.id = 'focusflow-warning';
+    warning.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: linear-gradient(to right, #6366f1, #a855f7);
+        color: white;
+        padding: 10px 20px;
+        z-index: 2147483647;
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        animation: slideDown 0.3s ease-out;
+    `;
+
+    const style = document.createElement('style');
+    style.innerHTML = `
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+    `;
+    document.head.appendChild(style);
+
+    warning.innerHTML = `
+        <span><strong>FocusFlow:</strong> ${reason}</span>
+        <button id="ff-warning-close" style="background: rgba(255,255,255,0.2); border: none; color: white; padding: 4px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; margin-left: 20px;">Got it</button>
+    `;
+
+    document.documentElement.appendChild(warning);
+
+    document.getElementById('ff-warning-close').onclick = () => warning.remove();
+    setTimeout(() => { if (warning) warning.remove(); }, 10000);
+}
 
 function injectBlocker(reason) {
     if (document.getElementById('focusflow-blocker')) return;
@@ -41,7 +115,7 @@ function injectBlocker(reason) {
         </div>
     `;
 
-    document.body.appendChild(blocker);
+    document.documentElement.appendChild(blocker);
 
     document.getElementById('ff-back-btn').onclick = () => {
         window.history.back();

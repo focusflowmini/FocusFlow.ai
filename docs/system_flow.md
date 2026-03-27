@@ -30,23 +30,26 @@ sequenceDiagram
     B->>B: Update Session Tracker state
 ```
 
-## 3. Tab Change & Analysis
+## 3. Tab Change & Agentic Analysis (LangGraph)
 ```mermaid
 sequenceDiagram
     participant E as Extension (Background)
-    participant B as Backend (The Brain)
+    participant B as Backend (FastAPI)
+    participant LG as LangGraph Workflow
     participant G as Groq AI API
     
-    E->>E: Listens for chrome.tabs.onUpdated
     E->>B: WS Message {type: "tab_update", url: "...", title: "..."}
-    B->>G: LLM Prompt (Analyze relevance)
-    G-->>B: Relevance Result (0.0 to 1.0)
-    B->>B: Update Distraction Score
-    alt Threshold Exceeded
-        B->>E: WS Message {type: "intervention", action: "block"}
+    B->>LG: Invoke Graph(state)
+    LG->>G: Node 1: Classify Tab Semantic Category
+    G-->>LG: {category: "SOCIAL_MEDIA", relevance: 0.1}
+    LG->>LG: Node 2: Compare with Focus Goal & History
+    LG->>LG: Node 3: Decide Autonomous Strategy
+    LG-->>B: Selected Action: "BLOCK" + Reasoning
+    alt Action is INTERVENTION (BLOCK/WARN)
+        B->>E: WS Message {type: "intervention", action: "block", reason: "..."}
         E->>E: Register Block in Memory
-    else Within Limits
-        B-->>E: Optional Heartbeat/ACK
+    else Action is ALLOW
+        B-->>E: WS Message {type: "status_update", score: "..."}
     end
 ```
 
